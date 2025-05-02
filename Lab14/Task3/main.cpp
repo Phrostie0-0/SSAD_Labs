@@ -57,25 +57,23 @@ public:
     }
 
     void undo(TextEditor& editor) {
-        if (undoStack.empty()) {
-            cout << "[Undo] Nothing to undo" << endl;
+        if (undoStack.size() <= 1) {
+            cout << "[Undo] Nothing to undo\n";
             return;
         }
-        redoStack.push(editor.save());
+        redoStack.push( undoStack.top() );
         undoStack.pop();
-        Memento m = undoStack.top();
-        editor.restore(m);
+        editor.restore( undoStack.top() );
     }
 
     void redo(TextEditor& editor) {
         if (redoStack.empty()) {
-            cout << "[Redo] Nothing to redo" << endl;
+            cout << "[Redo] Nothing to redo\n";
             return;
         }
-        undoStack.push(editor.save());
-        Memento m = redoStack.top();
+        undoStack.push( redoStack.top() );
+        editor.restore( redoStack.top() );
         redoStack.pop();
-        editor.restore(m);
     }
 
 private:
